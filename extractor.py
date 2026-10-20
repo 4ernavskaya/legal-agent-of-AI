@@ -40,7 +40,6 @@ if TESSERACT_PATH:
 
 
 def _check_ocr_ready():
-    """Проверяет, что Tesseract установлен и в нём есть все нужные языки."""
     if not TESSERACT_PATH:
         raise ValueError(
             "Не найдена программа Tesseract OCR. Установите её (инструкция в README) "
@@ -58,8 +57,8 @@ def _check_ocr_ready():
 def _ocr_image(image):
 
     _check_ocr_ready()
-    image = ImageOps.exif_transpose(image)  # учитываем поворот, записанный камерой телефона
-    image = image.convert("L")  # чёрно-белое изображение распознаётся лучше
+    image = ImageOps.exif_transpose(image)
+    image = image.convert("L")
     return pytesseract.image_to_string(image, lang=OCR_LANG)
 
 
