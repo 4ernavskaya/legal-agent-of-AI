@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <h1>Разберитесь в документе простыми словами</h1>
+    <p>Загрузите документ или вставьте текст, чтобы получить понятное объяснение его содержания.</p>
+</section>
+
+{% if error %}
+<div class="alert">{{ error }}</div>
+{% endif %}
+
+<form class="card" action="/analyze" method="POST" enctype="multipart/form-data">
+    <label class="dropzone" for="document">
+        <span class="dropzone-title">Выберите файл с документом</span>
+        <span class="dropzone-hint">PDF, JPG, PNG — до 10 МБ</span>
+        <input type="file" id="document" name="document" accept=".pdf,.jpg,.jpeg,.png">
+    </label>
+
+    <div class="divider">или вставьте текст</div>
+
+    <textarea name="text" rows="8" placeholder="Вставьте сюда текст договора или другого документа..."></textarea>
+
+    <button type="submit" class="btn">Разобрать документ с ИИ</button>
+</form>
+{% endblock %}
