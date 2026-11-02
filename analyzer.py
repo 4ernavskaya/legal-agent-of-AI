@@ -10,9 +10,9 @@ load_dotenv()
 
 MODEL = "GigaChat-3-Ultra"
 SCOPE = "GIGACHAT_API_PERS"
-MAX_CHARS = 30000  # ограничение длины договора, потом уточним
+MAX_CHARS = 30000
 
-# Какой CSS-класс соответствует уровню риска (для цвета карточки)
+
 LEVELS = {"высокий": "high", "средний": "medium", "низкий": "low"}
 
 INSTRUCTIONS = """Ты помощник, который объясняет договоры простым языком человеку без юридического образования.
@@ -40,7 +40,6 @@ INSTRUCTIONS = """Ты помощник, который объясняет до�
 
 
 def ask_model(prompt):
-    """Отправляет текст в GigaChat и возвращает ответ."""
     credentials = os.getenv("GIGACHAT_CREDENTIALS")
     if not credentials:
         raise ValueError("Не найден ключ GigaChat. Проверьте файл .env в корне проекта.")
@@ -60,7 +59,7 @@ def ask_model(prompt):
 
 
 def _parse_json(answer):
-    """Достаёт JSON из ответа модели (она иногда оборачивает его в ```)."""
+
     cleaned = re.sub(r"```(?:json)?", "", answer).strip()
     start = cleaned.find("{")
     end = cleaned.rfind("}")
@@ -73,7 +72,6 @@ def _parse_json(answer):
 
 
 def analyze_document(document_text):
-    """Главная функция: принимает текст договора, возвращает словарь с разбором."""
     if len(document_text) > MAX_CHARS:
         raise ValueError(f"Документ слишком длинный (больше {MAX_CHARS} символов).")
 
