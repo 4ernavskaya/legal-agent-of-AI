@@ -1,7 +1,6 @@
 import json
 import os
 import re
-
 from dotenv import load_dotenv
 from gigachat import GigaChat
 from gigachat.exceptions import GigaChatException
