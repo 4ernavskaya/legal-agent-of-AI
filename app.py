@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request
+
+from analyzer import analyze_document
 from extractor import extract_text_from_image, extract_text_from_pdf
 
 app = Flask(__name__)
@@ -23,6 +25,21 @@ def _extract_document_text(file):
     return extract_text_from_image(file.stream)
 
 
+def _render_result(source, document_text):
+    """Отправляет текст на анализ в модель и показывает страницу с результатом."""
+    try:
+        analysis = analyze_document(document_text)
+    except ValueError as error:
+        return _render_error(str(error))
+    else:
+        return render_template(
+            "result.html",
+            source=source,
+            document_text=document_text,
+            analysis=analysis,
+        )
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -38,7 +55,7 @@ def analyze():
         return _render_error("Загрузите файл или вставьте текст документа.")
 
     if not has_file:
-        return render_template("result.html", source="вставленный текст", document_text=text)
+        return _render_result("вставленный текст", text)
 
     if not allowed_file(file.filename):
         return _render_error("Поддерживаются только файлы PDF, JPG и PNG.")
@@ -48,7 +65,7 @@ def analyze():
     except ValueError as error:
         return _render_error(str(error))
     else:
-        return render_template("result.html", source=file.filename, document_text=document_text)
+        return _render_result(file.filename, document_text)
 
 
 @app.errorhandler(413)
